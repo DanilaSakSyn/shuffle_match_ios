@@ -8,7 +8,8 @@ class FavoritesRandomizersTab extends StatefulWidget {
   const FavoritesRandomizersTab({super.key});
 
   @override
-  State<FavoritesRandomizersTab> createState() => _FavoritesRandomizersTabState();
+  State<FavoritesRandomizersTab> createState() =>
+      _FavoritesRandomizersTabState();
 }
 
 class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
@@ -21,15 +22,9 @@ class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF070A11), Color(0xFF111725)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -40,7 +35,7 @@ class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
                   children: const [
                     Expanded(
                       child: Text(
-                        'Избранные рандомайзеры',
+                        'Favorite Randomizers',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 26,
@@ -57,13 +52,15 @@ class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
                     valueListenable: RandomizerFavorites.instance.favorites,
                     builder: (context, favorites, _) {
                       final liked = randomizerDefinitions
-                          .where((definition) => favorites.contains(definition.id))
+                          .where(
+                            (definition) => favorites.contains(definition.id),
+                          )
                           .toList();
 
                       if (liked.isEmpty) {
                         return Center(
                           child: Text(
-                            'Здесь появятся понравившиеся рандомайзеры',
+                            'Liked randomizers will appear here',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.7),
@@ -76,12 +73,13 @@ class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
 
                       return GridView.builder(
                         physics: const BouncingScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 18,
-                          crossAxisSpacing: 18,
-                          childAspectRatio: 0.95,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 18,
+                              crossAxisSpacing: 18,
+                              childAspectRatio: 0.95,
+                            ),
                         itemCount: liked.length,
                         itemBuilder: (context, index) {
                           final item = liked[index];
@@ -94,10 +92,15 @@ class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
                                 gradient: const LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [Color(0xE6FF8A38), Color(0xF0FF5E1A)],
+                                  colors: [
+                                    Color(0xE6FF8A38),
+                                    Color(0xF0FF5E1A),
+                                  ],
                                 ),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.white.withOpacity(0.08)),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.08),
+                                ),
                                 boxShadow: const [
                                   BoxShadow(
                                     color: Color(0x44FFB36B),
@@ -153,7 +156,9 @@ class _FavoritesRandomizersTabState extends State<FavoritesRandomizersTab> {
                                     ),
                                     const SizedBox(height: 6),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
                                       child: Text(
                                         item.description,
                                         textAlign: TextAlign.center,

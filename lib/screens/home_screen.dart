@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-import 'placeholder_tab.dart';
 import 'randomizers/favorites_tab.dart';
 import 'randomizers/randomizers_tab.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,33 +10,26 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
-      backgroundColor: CupertinoColors.white.withOpacity(0.2),
+      backgroundColor: const Color(0xFF3B0A21),
       tabBar: CupertinoTabBar(
-        backgroundColor: const Color.fromARGB(38, 13, 18, 29),
+        backgroundColor: const Color(0xFF3B0A21),
         activeColor: const Color(0xFFFF8A38),
         inactiveColor: const Color(0x66FFFFFF),
-        border: Border(
-          top: BorderSide(
-            color: CupertinoColors.white.withOpacity(0.2),
-            width: 0.5,
-          ),
+        border: const Border(
+          top: BorderSide(color: Color(0x33FFFFFF), width: 0.5),
         ),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.shuffle_medium),
-            label: 'Рандом',
+              label: 'Random',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.heart_fill),
-            label: 'Избранное',
+              label: 'Favorites',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.clock),
-            label: 'История',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_crop_circle),
-            label: 'Профиль',
+            icon: Icon(CupertinoIcons.gear_alt_fill),
+              label: 'Settings',
           ),
         ],
       ),
@@ -48,9 +40,7 @@ class HomeScreen extends StatelessWidget {
           case 1:
             return const FavoritesRandomizersTab();
           case 2:
-            return const PlaceholderTab(title: 'История');
-          case 3:
-            return const PlaceholderTab(title: 'Профиль');
+            return const SettingsScreen();
           default:
             return const RandomizersTab();
         }

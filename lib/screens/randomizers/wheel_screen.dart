@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/app_settings.dart';
 import '../../models/randomizer_favorites.dart';
 
 class WheelScreen extends StatefulWidget {
@@ -27,7 +29,7 @@ class _WheelScreenState extends State<WheelScreen> {
 
   final StreamController<int> _selected = StreamController<int>.broadcast();
   final TextEditingController _controller = TextEditingController();
-  List<String> _segments = ['Приз 1', 'Приз 2', 'Приз 3', 'Приз 4'];
+  List<String> _segments = ['Prize 1', 'Prize 2', 'Prize 3', 'Prize 4'];
   bool _spinning = false;
 
   bool get _hasMinimumSegments => _segments.length >= 2;
@@ -36,6 +38,7 @@ class _WheelScreenState extends State<WheelScreen> {
   void initState() {
     super.initState();
     RandomizerFavorites.instance.ensureLoaded();
+    AppSettings.instance.ensureLoaded();
     _restoreSegments();
   }
 
@@ -47,6 +50,21 @@ class _WheelScreenState extends State<WheelScreen> {
         _segments = saved;
       });
     }
+  }
+
+  bool _shouldPlaySound = false;
+  int lastFocusedIndex = -1;
+  void _focusItemChanged(int value) async {
+    // print(value);
+    if (lastFocusedIndex == value) return;
+    lastFocusedIndex = value;
+    if (_shouldPlaySound) return;
+    _shouldPlaySound = true;
+    if (AppSettings.instance.soundsEnabled.value) {
+      SystemSound.play(SystemSoundType.click);
+    }
+    await Future.delayed(const Duration(milliseconds: 30));
+    _shouldPlaySound = false;
   }
 
   Future<void> _persistSegments() async {
@@ -76,9 +94,18 @@ class _WheelScreenState extends State<WheelScreen> {
     setState(() {
       _spinning = true;
     });
+    if (AppSettings.instance.soundsEnabled.value) {
+      await SystemSound.play(SystemSoundType.click);
+    }
+    if (AppSettings.instance.hapticsEnabled.value) {
+      HapticFeedback.mediumImpact();
+    }
     _selected.add(Fortune.randomInt(0, _segments.length));
     await Future.delayed(const Duration(seconds: 4));
     if (!mounted) return;
+    if (AppSettings.instance.hapticsEnabled.value) {
+      HapticFeedback.lightImpact();
+    }
     setState(() {
       _spinning = false;
     });
@@ -94,15 +121,9 @@ class _WheelScreenState extends State<WheelScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF060910), Color(0xFF111725)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -133,7 +154,7 @@ class _WheelScreenState extends State<WheelScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        'Колесо удачи',
+                        'Wheel of Fortune',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 28,
@@ -149,7 +170,9 @@ class _WheelScreenState extends State<WheelScreen> {
                         return CupertinoButton(
                           padding: EdgeInsets.zero,
                           minSize: 0,
-                          onPressed: () => RandomizerFavorites.instance.toggle(_randomizerId),
+                          onPressed: () => RandomizerFavorites.instance.toggle(
+                            _randomizerId,
+                          ),
                           child: Container(
                             width: 44,
                             height: 44,
@@ -163,8 +186,12 @@ class _WheelScreenState extends State<WheelScreen> {
                               ),
                             ),
                             child: Icon(
-                              liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: liked ? const Color(0xFFFF8A38) : Colors.white,
+                              liked
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              color: liked
+                                  ? const Color(0xFFFF8A38)
+                                  : Colors.white,
                               size: 20,
                             ),
                           ),
@@ -179,8 +206,8 @@ class _WheelScreenState extends State<WheelScreen> {
                       ? Center(
                           child: Text(
                             _segments.isEmpty
-                                ? 'Добавьте минимум один сектор'
-                                : 'Добавьте ещё один сектор',
+                                ? 'Add at least one segment'
+                                : 'Add one more segment',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               color: Colors.white,
@@ -210,34 +237,45 @@ class _WheelScreenState extends State<WheelScreen> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(28),
-                            child: FortuneWheel(
-                              duration: const Duration(seconds: 3),
-                              selected: _selected.stream,
-                              indicators: const [
-                                FortuneIndicator(
-                                  alignment: Alignment.topCenter,
-                                  child: TriangleIndicator(
-                                    color: Color(0xFFFF8A38),
-                                  ),
-                                ),
-                              ],
-                              items: [
-                                for (var i = 0; i < _segments.length; i++)
-                                  FortuneItem(
-                                    style: FortuneItemStyle(
-                                      color: _palette[i % _palette.length],
-                                      borderColor: const Color(0x99FFFFFF),
-                                      borderWidth: 1.5,
-                                    ),
-                                    child: Text(
-                                      _segments[i],
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
+                            child: ValueListenableBuilder<bool>(
+                              valueListenable:
+                                  AppSettings.instance.hapticsEnabled,
+                              builder: (context, hapticsEnabled, _) {
+                                return FortuneWheel(
+                                  hapticImpact: hapticsEnabled
+                                      ? HapticImpact.light
+                                      : HapticImpact.none,
+                                  animateFirst: false,
+                                  onFocusItemChanged: _focusItemChanged,
+                                  duration: const Duration(seconds: 3),
+                                  selected: _selected.stream,
+                                  indicators: const [
+                                    FortuneIndicator(
+                                      alignment: Alignment.topCenter,
+                                      child: TriangleIndicator(
+                                        color: Color(0xFFFF8A38),
                                       ),
                                     ),
-                                  ),
-                              ],
+                                  ],
+                                  items: [
+                                    for (var i = 0; i < _segments.length; i++)
+                                      FortuneItem(
+                                        style: FortuneItemStyle(
+                                          color: _palette[i % _palette.length],
+                                          borderColor: const Color(0x99FFFFFF),
+                                          borderWidth: 1.5,
+                                        ),
+                                        child: Text(
+                                          _segments[i],
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -245,7 +283,7 @@ class _WheelScreenState extends State<WheelScreen> {
                 const SizedBox(height: 22),
                 CupertinoButton.filled(
                   onPressed: _hasMinimumSegments ? _spin : null,
-                  child: Text(_spinning ? 'Крутится...' : 'Крутить'),
+                  child: Text(_spinning ? 'Spinning...' : 'Spin'),
                 ),
                 const SizedBox(height: 22),
                 Row(
@@ -253,7 +291,7 @@ class _WheelScreenState extends State<WheelScreen> {
                     Expanded(
                       child: CupertinoTextField(
                         controller: _controller,
-                        placeholder: 'Новый сектор',
+                        placeholder: 'New segment',
                         style: const TextStyle(color: Colors.white),
                         cursorColor: const Color(0xFFFF8A38),
                         placeholderStyle: TextStyle(
@@ -288,7 +326,7 @@ class _WheelScreenState extends State<WheelScreen> {
                       ),
                       color: Colors.white.withOpacity(0.08),
                       onPressed: _addSegment,
-                      child: const Text('Добавить'),
+                      child: const Text('Add'),
                     ),
                   ],
                 ),

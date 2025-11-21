@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../models/app_settings.dart';
 import '../../models/randomizer_favorites.dart';
 
 class DiceRandomizerScreen extends StatefulWidget {
@@ -22,9 +24,13 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
   void initState() {
     super.initState();
     RandomizerFavorites.instance.ensureLoaded();
+    AppSettings.instance.ensureLoaded();
   }
 
   void _roll() {
+    if (AppSettings.instance.soundsEnabled.value) {
+      SystemSound.play(SystemSoundType.click);
+    }
     setState(() {
       _value = _random.nextInt(6) + 1;
     });
@@ -33,15 +39,9 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF060910), Color(0xFF131A2A)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -72,7 +72,7 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        'Бросок кубика',
+                        'Dice Roll',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 28,
@@ -88,7 +88,9 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
                         return CupertinoButton(
                           padding: EdgeInsets.zero,
                           minSize: 0,
-                          onPressed: () => RandomizerFavorites.instance.toggle(_randomizerId),
+                          onPressed: () => RandomizerFavorites.instance.toggle(
+                            _randomizerId,
+                          ),
                           child: Container(
                             width: 44,
                             height: 44,
@@ -102,8 +104,12 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
                               ),
                             ),
                             child: Icon(
-                              liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: liked ? const Color(0xFFFF8A38) : Colors.white,
+                              liked
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              color: liked
+                                  ? const Color(0xFFFF8A38)
+                                  : Colors.white,
                               size: 20,
                             ),
                           ),
@@ -119,7 +125,7 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Выпало $_value',
+                        'You rolled $_value',
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
@@ -177,7 +183,7 @@ class _DiceRandomizerScreenState extends State<DiceRandomizerScreen> {
                         ),
                         child: CupertinoButton.filled(
                           onPressed: _roll,
-                          child: const Text('Бросить кубик'),
+                          child: const Text('Roll dice'),
                         ),
                       ),
                     ],

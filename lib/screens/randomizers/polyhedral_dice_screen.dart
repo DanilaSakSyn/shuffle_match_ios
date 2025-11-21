@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../models/app_settings.dart';
 import '../../models/randomizer_favorites.dart';
 
 class PolyhedralDiceScreen extends StatefulWidget {
@@ -29,9 +31,13 @@ class _PolyhedralDiceScreenState extends State<PolyhedralDiceScreen> {
   void initState() {
     super.initState();
     RandomizerFavorites.instance.ensureLoaded();
+    AppSettings.instance.ensureLoaded();
   }
 
   void _roll() {
+    if (AppSettings.instance.soundsEnabled.value) {
+      SystemSound.play(SystemSoundType.click);
+    }
     setState(() {
       _value = _random.nextInt(widget.sides) + 1;
     });
@@ -40,15 +46,9 @@ class _PolyhedralDiceScreenState extends State<PolyhedralDiceScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF05070D), Color(0xFF141C2E)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -95,7 +95,9 @@ class _PolyhedralDiceScreenState extends State<PolyhedralDiceScreen> {
                         return CupertinoButton(
                           padding: EdgeInsets.zero,
                           minSize: 0,
-                          onPressed: () => RandomizerFavorites.instance.toggle(widget.randomizerId),
+                          onPressed: () => RandomizerFavorites.instance.toggle(
+                            widget.randomizerId,
+                          ),
                           child: Container(
                             width: 44,
                             height: 44,
@@ -109,8 +111,12 @@ class _PolyhedralDiceScreenState extends State<PolyhedralDiceScreen> {
                               ),
                             ),
                             child: Icon(
-                              liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: liked ? const Color(0xFFFF8A38) : Colors.white,
+                              liked
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              color: liked
+                                  ? const Color(0xFFFF8A38)
+                                  : Colors.white,
                               size: 20,
                             ),
                           ),
@@ -125,7 +131,7 @@ class _PolyhedralDiceScreenState extends State<PolyhedralDiceScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Выпало $_value',
+                        'You rolled $_value',
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
@@ -189,7 +195,7 @@ class _PolyhedralDiceScreenState extends State<PolyhedralDiceScreen> {
                         ),
                         child: CupertinoButton.filled(
                           onPressed: _roll,
-                          child: const Text('Бросить кубик'),
+                          child: const Text('Roll dice'),
                         ),
                       ),
                     ],
@@ -210,7 +216,7 @@ class DiceD4Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const PolyhedralDiceScreen(
-      title: 'Кубик D-4',
+      title: 'D4 Dice',
       sides: 4,
       randomizerId: 'dice_d4',
     );
@@ -223,7 +229,7 @@ class DiceD8Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const PolyhedralDiceScreen(
-      title: 'Кубик D-8',
+      title: 'D8 Dice',
       sides: 8,
       randomizerId: 'dice_d8',
     );
@@ -236,7 +242,7 @@ class DiceD10Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const PolyhedralDiceScreen(
-      title: 'Кубик D-10',
+      title: 'D10 Dice',
       sides: 10,
       randomizerId: 'dice_d10',
     );
@@ -249,7 +255,7 @@ class DiceD12Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const PolyhedralDiceScreen(
-      title: 'Кубик D-12',
+      title: 'D12 Dice',
       sides: 12,
       randomizerId: 'dice_d12',
     );
@@ -262,7 +268,7 @@ class DiceD100Screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const PolyhedralDiceScreen(
-      title: 'Кубик D-100',
+      title: 'D100 Dice',
       sides: 100,
       randomizerId: 'dice_d100',
     );

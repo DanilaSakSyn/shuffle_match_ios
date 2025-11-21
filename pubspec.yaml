@@ -16,6 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.2.3
   flutter_fortune_wheel: ^1.3.0
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0
@@ -29,15 +30,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
-    - assets/music/
-    - assets/sfx/
+    - assets/icons/
 
-  fonts:
-    - family: Permanent Marker
-      fonts:
-        - asset: assets/fonts/Permanent_Marker/PermanentMarker-Regular.ttf
-
+ 
 flutter_launcher_icons:
   android: false
   ios: true

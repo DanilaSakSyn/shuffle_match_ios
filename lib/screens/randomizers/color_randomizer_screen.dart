@@ -17,85 +17,85 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
 
   static const List<_ColorOption> _options = [
     _ColorOption(
-      name: 'Алый',
+      name: 'Scarlet',
       color: Color(0xFFFF3B30),
       hex: '#FF3B30',
       rgb: 'RGB(255, 59, 48)',
     ),
     _ColorOption(
-      name: 'Оранжевый',
+      name: 'Orange',
       color: Color(0xFFFF9500),
       hex: '#FF9500',
       rgb: 'RGB(255, 149, 0)',
     ),
     _ColorOption(
-      name: 'Золотой',
+      name: 'Gold',
       color: Color(0xFFFFCC00),
       hex: '#FFCC00',
       rgb: 'RGB(255, 204, 0)',
     ),
     _ColorOption(
-      name: 'Лаймовый',
+      name: 'Lime',
       color: Color(0xFF34C759),
       hex: '#34C759',
       rgb: 'RGB(52, 199, 89)',
     ),
     _ColorOption(
-      name: 'Изумрудный',
+      name: 'Emerald',
       color: Color(0xFF30D158),
       hex: '#30D158',
       rgb: 'RGB(48, 209, 88)',
     ),
     _ColorOption(
-      name: 'Бирюзовый',
+      name: 'Turquoise',
       color: Color(0xFF5AC8FA),
       hex: '#5AC8FA',
       rgb: 'RGB(90, 200, 250)',
     ),
     _ColorOption(
-      name: 'Голубой',
+      name: 'Sky blue',
       color: Color(0xFF0A84FF),
       hex: '#0A84FF',
       rgb: 'RGB(10, 132, 255)',
     ),
     _ColorOption(
-      name: 'Синий',
+      name: 'Blue',
       color: Color(0xFF5856D6),
       hex: '#5856D6',
       rgb: 'RGB(88, 86, 214)',
     ),
     _ColorOption(
-      name: 'Фиолетовый',
+      name: 'Violet',
       color: Color(0xFFAF52DE),
       hex: '#AF52DE',
       rgb: 'RGB(175, 82, 222)',
     ),
     _ColorOption(
-      name: 'Розовый',
+      name: 'Pink',
       color: Color(0xFFFF2D55),
       hex: '#FF2D55',
       rgb: 'RGB(255, 45, 85)',
     ),
     _ColorOption(
-      name: 'Бордовый',
+      name: 'Burgundy',
       color: Color(0xFFB00020),
       hex: '#B00020',
       rgb: 'RGB(176, 0, 32)',
     ),
     _ColorOption(
-      name: 'Графитовый',
+      name: 'Graphite',
       color: Color(0xFF1C1C1E),
       hex: '#1C1C1E',
       rgb: 'RGB(28, 28, 30)',
     ),
     _ColorOption(
-      name: 'Лавандовый',
+      name: 'Lavender',
       color: Color(0xFFD1A9FF),
       hex: '#D1A9FF',
       rgb: 'RGB(209, 169, 255)',
     ),
     _ColorOption(
-      name: 'Мятный',
+      name: 'Mint',
       color: Color(0xFF00C7BE),
       hex: '#00C7BE',
       rgb: 'RGB(0, 199, 190)',
@@ -121,15 +121,9 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF05070D), Color(0xFF141C2E)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -160,7 +154,7 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
                     ),
                     const Expanded(
                       child: Text(
-                        'Случайный цвет',
+                        'Random Color',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 28,
@@ -176,7 +170,9 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
                         return CupertinoButton(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 0),
-                          onPressed: () => RandomizerFavorites.instance.toggle(_randomizerId),
+                          onPressed: () => RandomizerFavorites.instance.toggle(
+                            _randomizerId,
+                          ),
                           child: Container(
                             width: 44,
                             height: 44,
@@ -190,8 +186,12 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
                               ),
                             ),
                             child: Icon(
-                              liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: liked ? const Color(0xFFFF8A38) : Colors.white,
+                              liked
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              color: liked
+                                  ? const Color(0xFFFF8A38)
+                                  : Colors.white,
                               size: 20,
                             ),
                           ),
@@ -236,9 +236,7 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
                             borderRadius: BorderRadius.circular(32),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 300),
-                              decoration: BoxDecoration(
-                                color: _current.color,
-                              ),
+                              decoration: BoxDecoration(color: _current.color),
                             ),
                           ),
                         ),
@@ -267,15 +265,9 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _ValueRow(
-                              label: 'HEX',
-                              value: _current.hex,
-                            ),
+                            _ValueRow(label: 'HEX', value: _current.hex),
                             const SizedBox(height: 16),
-                            _ValueRow(
-                              label: 'RGB',
-                              value: _current.rgb,
-                            ),
+                            _ValueRow(label: 'RGB', value: _current.rgb),
                           ],
                         ),
                       ),
@@ -292,7 +284,7 @@ class _ColorRandomizerScreenState extends State<ColorRandomizerScreen> {
                         ),
                         child: CupertinoButton.filled(
                           onPressed: _shuffle,
-                          child: const Text('Новый цвет'),
+                          child: const Text('New color'),
                         ),
                       ),
                     ],

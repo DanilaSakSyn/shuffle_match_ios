@@ -4,9 +4,10 @@
 
 import 'package:flutter/cupertino.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: Color(0xFFFF8A38),
         primaryContrastingColor: Color(0xFF0C0F16),
-        scaffoldBackgroundColor: Color(0xFF080B12),
+        scaffoldBackgroundColor: Color(0xFF3B0A21),
         barBackgroundColor: Color(0xFF121621),
         textTheme: CupertinoTextThemeData(
           primaryColor: Color(0xFFF7F7F7),
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

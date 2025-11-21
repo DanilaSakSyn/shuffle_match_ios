@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/app_settings.dart';
 import '../../models/randomizer_favorites.dart';
 
 class FortuneBarScreen extends StatefulWidget {
@@ -20,7 +22,7 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
 
   final StreamController<int> _selected = StreamController<int>.broadcast();
   final TextEditingController _controller = TextEditingController();
-  List<String> _values = ['Вариант 1', 'Вариант 2', 'Вариант 3'];
+  List<String> _values = ['Option 1', 'Option 2', 'Option 3'];
   bool _spinning = false;
 
   bool get _hasMinimumValues => _values.length >= 2;
@@ -29,6 +31,7 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
   void initState() {
     super.initState();
     RandomizerFavorites.instance.ensureLoaded();
+    AppSettings.instance.ensureLoaded();
     _restoreValues();
   }
 
@@ -69,6 +72,9 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
     setState(() {
       _spinning = true;
     });
+    if (AppSettings.instance.soundsEnabled.value) {
+      await SystemSound.play(SystemSoundType.click);
+    }
     _selected.add(Fortune.randomInt(0, _values.length));
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
@@ -87,15 +93,9 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF05070D), Color(0xFF141C2E)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -126,7 +126,7 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
                     ),
                     const Expanded(
                       child: Text(
-                        'Полоса удачи',
+                        'Fortune Bar',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 28,
@@ -178,8 +178,8 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
                       ? Center(
                           child: Text(
                             _values.isEmpty
-                                ? 'Добавьте минимум одно значение'
-                                : 'Добавьте ещё одно значение',
+                                ? 'Add at least one value'
+                                : 'Add one more value',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               color: Colors.white,
@@ -218,6 +218,10 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(18),
                                 child: FortuneBar(
+                                  onFling: () {
+                                    // SystemSound.play(SystemSoundType.click);
+                                  },
+
                                   height: 140,
                                   animateFirst: false,
                                   styleStrategy: UniformStyleStrategy(
@@ -268,7 +272,7 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
                 const SizedBox(height: 22),
                 CupertinoButton.filled(
                   onPressed: _hasMinimumValues ? _spin : null,
-                  child: Text(_spinning ? 'Выбираю...' : 'Выбрать'),
+                  child: Text(_spinning ? 'Choosing...' : 'Pick'),
                 ),
                 const SizedBox(height: 22),
                 Row(
@@ -276,7 +280,7 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
                     Expanded(
                       child: CupertinoTextField(
                         controller: _controller,
-                        placeholder: 'Новое значение',
+                        placeholder: 'New value',
                         style: const TextStyle(color: Colors.white),
                         cursorColor: const Color(0xFFFF8A38),
                         placeholderStyle: TextStyle(
@@ -311,7 +315,7 @@ class _FortuneBarScreenState extends State<FortuneBarScreen> {
                       ),
                       color: Colors.white.withOpacity(0.08),
                       onPressed: _addValue,
-                      child: const Text('Добавить'),
+                      child: const Text('Add'),
                     ),
                   ],
                 ),

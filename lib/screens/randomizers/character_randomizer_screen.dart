@@ -10,104 +10,104 @@ class CharacterRandomizerScreen extends StatefulWidget {
   const CharacterRandomizerScreen({super.key});
 
   @override
-  State<CharacterRandomizerScreen> createState() => _CharacterRandomizerScreenState();
+  State<CharacterRandomizerScreen> createState() =>
+      _CharacterRandomizerScreenState();
 }
 
 class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
   static const _randomizerId = 'character_randomizer';
-  static const List<String> _genders = ['Мужчина', 'Женщина'];
+  static const List<String> _genders = ['Male', 'Female'];
   static const List<String> _maleNames = [
-    'Андрей',
-    'Борис',
-    'Виктор',
-    'Григорий',
-    'Дмитрий',
-    'Егор',
-    'Илья',
-    'Кирилл',
-    'Леонид',
-    'Максим',
-    'Никита',
-    'Олег',
-    'Павел',
-    'Роман',
-    'Сергей',
-    'Тимур',
-    'Федор',
-    'Юрий',
+    'Alexander',
+    'Benjamin',
+    'Caleb',
+    'Daniel',
+    'Ethan',
+    'Felix',
+    'Henry',
+    'Isaac',
+    'Jacob',
+    'Liam',
+    'Mason',
+    'Nathan',
+    'Oliver',
+    'Parker',
+    'Ryan',
+    'Samuel',
+    'Thomas',
+    'William',
   ];
   static const List<String> _femaleNames = [
-    'Алина',
-    'Анна',
-    'Валерия',
-    'Дарья',
-    'Екатерина',
-    'Жанна',
-    'Инна',
-    'Карина',
-    'Лидия',
-    'Мария',
-    'Наталья',
-    'Ольга',
-    'Полина',
-    'Светлана',
-    'Татьяна',
-    'Ульяна',
-    'Юлия',
-    'Яна',
+    'Amelia',
+    'Ava',
+    'Charlotte',
+    'Diana',
+    'Ella',
+    'Grace',
+    'Hannah',
+    'Isabella',
+    'Lily',
+    'Maya',
+    'Natalie',
+    'Olivia',
+    'Penelope',
+    'Sophia',
+    'Stella',
+    'Victoria',
+    'Zoe',
+    'Scarlett',
   ];
   static const List<String> _lastNames = [
-    'Азаров',
-    'Березин',
-    'Воронов',
-    'Громов',
-    'Данилов',
-    'Ершов',
-    'Жуков',
-    'Зимин',
-    'Иванов',
-    'Котов',
-    'Лавров',
-    'Медведев',
-    'Николаев',
-    'Орлов',
-    'Панфилов',
-    'Рыбаков',
-    'Соколов',
-    'Туров',
-    'Устинов',
-    'Фролов',
-    'Харитонов',
-    'Цветков',
-    'Чернов',
-    'Шестаков',
-    'Юдин',
-    'Яковлев',
+    'Anderson',
+    'Bennett',
+    'Campbell',
+    'Dawson',
+    'Ellis',
+    'Foster',
+    'Griffin',
+    'Harper',
+    'Irwin',
+    'Jackson',
+    'Kennedy',
+    'Lawson',
+    'Mitchell',
+    'Nelson',
+    'Owens',
+    'Parker',
+    'Quinn',
+    'Reed',
+    'Sawyer',
+    'Turner',
+    'Walker',
+    'Young',
+    'Baker',
+    'Carter',
+    'Dixon',
   ];
   static const List<String> _races = [
-    'Человек',
-    'Эльф',
-    'Дварф',
-    'Орк',
-    'Тифлинг',
-    'Драконорожденный',
-    'Гном',
-    'Полуорк',
-    'Полуэльф',
-    'Халфлинг',
+    'Human',
+    'Elf',
+    'Dwarf',
+    'Orc',
+    'Tiefling',
+    'Dragonborn',
+    'Gnome',
+    'Half-Orc',
+    'Half-Elf',
+    'Halfling',
   ];
   static const List<String> _classes = [
-    'Воин',
-    'Маг',
-    'Плут',
-    'Жрец',
-    'Следопыт',
-    'Бард',
-    'Паладин',
-    'Чернокнижник',
-    'Друид',
-    'Монах',
-    'Волшебник',
+    'Warrior',
+    'Mage',
+    'Rogue',
+    'Cleric',
+    'Ranger',
+    'Bard',
+    'Paladin',
+    'Warlock',
+    'Druid',
+    'Monk',
+    'Wizard',
   ];
 
   final Random _random = Random();
@@ -122,7 +122,7 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
 
   Character _generateCharacter() {
     final gender = _genders[_random.nextInt(_genders.length)];
-    final firstNames = gender == 'Мужчина' ? _maleNames : _femaleNames;
+    final firstNames = gender == 'Male' ? _maleNames : _femaleNames;
     final firstName = firstNames[_random.nextInt(firstNames.length)];
     final lastName = _lastNames[_random.nextInt(_lastNames.length)];
     final age = _random.nextInt(48) + 18;
@@ -147,15 +147,9 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF05070D), Color(0xFF141C2E)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -186,7 +180,7 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
                     ),
                     const Expanded(
                       child: Text(
-                        'Генератор персонажа',
+                        'Character Generator',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 28,
@@ -202,7 +196,9 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
                         return CupertinoButton(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 0),
-                          onPressed: () => RandomizerFavorites.instance.toggle(_randomizerId),
+                          onPressed: () => RandomizerFavorites.instance.toggle(
+                            _randomizerId,
+                          ),
                           child: Container(
                             width: 44,
                             height: 44,
@@ -216,8 +212,12 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
                               ),
                             ),
                             child: Icon(
-                              liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                              color: liked ? const Color(0xFFFF8A38) : Colors.white,
+                              liked
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart,
+                              color: liked
+                                  ? const Color(0xFFFF8A38)
+                                  : Colors.white,
                               size: 20,
                             ),
                           ),
@@ -264,25 +264,13 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
                         ),
                         child: Column(
                           children: [
-                            _InfoRow(
-                              label: 'Пол',
-                              value: _current.gender,
-                            ),
+                            _InfoRow(label: 'Gender', value: _current.gender),
                             const SizedBox(height: 16),
-                            _InfoRow(
-                              label: 'Возраст',
-                              value: '${_current.age}',
-                            ),
+                            _InfoRow(label: 'Age', value: '${_current.age}'),
                             const SizedBox(height: 16),
-                            _InfoRow(
-                              label: 'Раса',
-                              value: _current.race,
-                            ),
+                            _InfoRow(label: 'Race', value: _current.race),
                             const SizedBox(height: 16),
-                            _InfoRow(
-                              label: 'Класс',
-                              value: _current.gameClass,
-                            ),
+                            _InfoRow(label: 'Class', value: _current.gameClass),
                           ],
                         ),
                       ),
@@ -299,7 +287,7 @@ class _CharacterRandomizerScreenState extends State<CharacterRandomizerScreen> {
                         ),
                         child: CupertinoButton.filled(
                           onPressed: _shuffle,
-                          child: const Text('Новый персонаж'),
+                          child: const Text('New character'),
                         ),
                       ),
                     ],

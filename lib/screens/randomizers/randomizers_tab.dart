@@ -11,15 +11,9 @@ class RandomizersTab extends StatelessWidget {
     final items = randomizerDefinitions;
 
     return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF3B0A21),
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF070A11), Color(0xFF111725)],
-          ),
-        ),
+        color: const Color(0xFF3B0A21),
         child: SafeArea(
           child: GridView.builder(
             padding: const EdgeInsets.all(20),
