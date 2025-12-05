@@ -81,7 +81,7 @@ desc "Sync codesigning certificates for Build"
       path: "ios/Runner.xcodeproj",
       targets: "notifications",
       team_id: ENV["APPLE_TEAM_ID"],
-      bundle_identifier: "#{ENV['IOS_BUNDLE_ID']}.notifications",
+      bundle_identifier: "#{ENV['IOS_BUNDLE_ID']}.notification-service",
       profile_name: ENV["sigh_#{ENV['IOS_BUNDLE_ID']}.notifications_appstore_profile-name"],
       code_sign_identity: "Apple Distribution"
     )
